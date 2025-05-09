@@ -7,12 +7,10 @@ WORKDIR /opt/app
 # Copy Strapi project only
 COPY project/package*.json ./
 
-# Fix permissions before npm install (so npm has access to install dependencies)
-RUN chmod -R 755 /opt/app && chown -R 1001:0 /opt/app
-
+# Install dependencies as root
 RUN npm install
 
-# Copy rest of the Strapi source
+# Copy the rest of the Strapi source
 COPY project/ .
 
 # Build the admin panel
@@ -29,8 +27,12 @@ WORKDIR /opt/app
 # Copy built app and node_modules from builder
 COPY --from=builder /opt/app /opt/app
 
-# OpenShift-safe permissions
+# Set appropriate ownership and permissions for the app directory
+# Fix permissions only after copying files to the runtime image
 RUN chown -R 1001:0 /opt/app && chmod -R g+rwX /opt/app
+
+# Ensure node_modules is owned by the correct user (1001)
+RUN chown -R 1001:1001 /opt/app/node_modules
 
 # Use OpenShift-compatible non-root user
 USER 1001
