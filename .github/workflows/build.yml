@@ -18,21 +18,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Use Node.js 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: project/package-lock.json
-
-      - name: Install dependencies
-        working-directory: ./project
-        run: npm install
-
-      - name: 🛠️ Build admin panel
-        working-directory: ./project
-        run: npm run build
-
       - name: Build Docker image
         run: |
           docker build -t ghcr.io/${{ github.repository_owner }}/strapi-app:latest .
