@@ -27,6 +27,9 @@ USER 1001
 # Stage 2: Final runtime image
 FROM registry.access.redhat.com/ubi9/nodejs-18
 
+# Switch to root for file operations
+USER root
+
 # Set working directory
 WORKDIR /app
 
