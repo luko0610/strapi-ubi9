@@ -2,7 +2,7 @@
 FROM registry.access.redhat.com/ubi9/nodejs-18 AS builder
 
 # Set working directory
-WORKDIR /opt/app
+WORKDIR /app
 
 # Copy Strapi project only
 COPY project/package*.json ./
@@ -22,17 +22,17 @@ RUN npm run build
 FROM registry.access.redhat.com/ubi9/nodejs-18
 
 # Set working directory
-WORKDIR /opt/app
+WORKDIR /app
 
 # Copy built app and node_modules from builder
-COPY --from=builder /opt/app /opt/app
+COPY --from=builder /app /app
 
 # Set appropriate ownership and permissions for the app directory
 # Fix permissions only after copying files to the runtime image
-RUN chown -R 1001:0 /opt/app && chmod -R g+rwX /opt/app
+RUN chown -R 1001:0 /app && chmod -R g+rwX /app
 
 # Ensure node_modules is owned by the correct user (1001)
-RUN chown -R 1001:1001 /opt/app/node_modules
+RUN chown -R 1001:1001 /app/node_modules
 
 # Use OpenShift-compatible non-root user
 USER 1001
