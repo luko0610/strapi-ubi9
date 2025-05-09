@@ -1,6 +1,9 @@
 # Stage 1: Build stage using UBI 9
 FROM registry.access.redhat.com/ubi9/nodejs-18 AS builder
 
+# Switch to root user for installation
+USER root
+
 # Set working directory
 WORKDIR /app
 
@@ -15,6 +18,9 @@ COPY project/ .
 
 # Build the admin panel
 RUN npm run build
+
+# Switch back to default user for execution
+USER 1001
 
 # -----------------------------------------------------
 
