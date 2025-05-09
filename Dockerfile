@@ -6,6 +6,10 @@ WORKDIR /opt/app
 
 # Copy Strapi project only
 COPY project/package*.json ./
+
+# Fix permissions before npm install (so npm has access to install dependencies)
+RUN chmod -R 755 /opt/app && chown -R 1001:0 /opt/app
+
 RUN npm install
 
 # Copy rest of the Strapi source
